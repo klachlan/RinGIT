@@ -1,0 +1,189 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+
+
+```{r}
+library(dplyr)
+
+names(gapminder)
+
+subset_gapminder<-gapminder%>%select(year, country, gdpPercap)
+
+
+dim(subset_gapminder)
+
+
+year_country_gdp_euro<-gapmminder%>%
+  filter(continent="Europe")%>%
+select (year, country, gdpPercap)
+year_country_gdp_euro
+
+
+
+
+Africa_lifeexp<-gapminder%>%
+  filter(continent=="Africa")%>%
+  filter(year=="2007")
+
+select (year, country, lifeExp)
+Africa_lifeexp
+
+
+head(gapminder)
+
+str(gapminder)
+
+gap_by_continent<-gapminder%>%group_by(continent)
+
+gdp_by_continent<-gap_by_continent%>%
+  summarize (mean_gdpPercap=mean(gdpPercap))
+
+gdp_by_continent
+
+
+lifeexp_by_africa_country<-gapminder%>%
+  filter (continent=="Africa")%>%
+  group_by (year) %>%
+  summarize (mean_lifeexp_africa=mean(lifeExp))
+
+lifeexp_by_africa_country
+
+rmarkdown::render("diplyerandtidyRnotebook.Rmd","html_notebook")
+
+
+gdp_by_continent<-gapminder%>%
+  group_by(continent, year)%>%
+  summarize(mean_gdp=mean(gdpPercap),
+sd_gdp = sd(gdpPercap),
+mean_pop = mean(pop),
+sample_size = n(),
+se_gdp = sd_gdp/sqrt(sample_size))
+
+mean_pop
+
+
+#combining dplyr with ggplot2#
+
+gapminder%>%filter(continent=="Asia")%>%
+  ggplot(aes(x=gdpPercap, y = lifeExp)) +
+geom_point()
+  
+
+````{r}
+
+gap_wide<-read.csv("data/gapminder_wide.csv", stringsAsFactors = FALSE)
+colnames(gap_wide)
+
+
+#This data is in a wide format, we want to change it to long#
+
+head(gap_wide)
+  
+
+gap_long<-gap_wide%>%
+
+
+gap_long<-gap_long%>% separate(obstype_year, into = c("obs_type", "year"), sep = "_"
+
+
+
+gap_long$year<-as.integer(gap_long$year)
+head(gap_long)
+
+lifespan<-gap_long%>%  
+group_by(continent)%>%
+  summarize(meanlifespan= mean(lifeExp))
+lifespan
+
+gap_long%>% #filter(obs_type=="lifeExp")%>%
+  group_by (continent)%>%
+  summarize(mean_lifeExp = mean(obs_values))
+
+
+gap_normal<-gap_long%>% spread (obs_type, obs_values)
+str (gap_normal)
+colnames (gap_normal)
+
+names (gap)
+gap_normal<-gap_normal[,names(gap)]
+
+
+all.equal (gapminder, gap_normal)
+
+
+
+
+
+
+
+
+
+
+
+
+gap_normal<-gap_normal%>%arrange(country, continent, year)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+``````
+
+
+
+
+
+
+
+```
+
+gap_long<-gap_wide%>%
+gather (obstype_year, obs_values, -continent, -country)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###working with data the dplyr way
+
+select() - subset variables
+filter() - subset observations (rows)
+group_by() - counts and group data
+mutate() - adda new column based on the data
+group_by() function subset based on some column
+
+
+
+
+
+
+
